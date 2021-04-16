@@ -1,0 +1,76 @@
+name: Conventional Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # Run tests
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout git branch
+      - uses: actions/checkout@v2
+      # Install node.js environment
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      # Cache node_modules (busting only when yarn.lock change)
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      # Install dependencies
+      - name: Install
+        run: yarn install --frozen-lockfile
+      # Run all tests
+      - name: Test
+        run: yarn run test
+
+  # Conventional release
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout git branch
+      - uses: actions/checkout@v2
+        with:
+          # Fetch the entire history
+          fetch-depth: 0
+      # Install node.js environment
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      # Cache node_modules (busting only when yarn.lock change)
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      # Configure git with the built-in token
+      # (to push back the release updates: package.json's version, CHANGELOG etc.)
+      - name: Configure Git & NPM
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      # Install dependencies
+      - name: Install
+        run: yarn install --frozen-lockfile
+      # Build all packages
+      - name: Build
+        run: yarn run build
+      # Authenticate yarn towards registry.npmjs.org
+      - name: Authenticate with Registry
+        run: |
+          yarn logout
+          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Publish packages
+      - name: Release
+        run: yarn semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

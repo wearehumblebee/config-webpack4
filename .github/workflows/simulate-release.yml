@@ -1,0 +1,41 @@
+name: Simulate Release
+
+on: workflow_dispatch
+
+jobs:
+  # Simulate version release
+  simulate-release:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout git branch
+      - uses: actions/checkout@v2
+        with:
+          # Fetch the entire history
+          fetch-depth: 0
+      # Install node.js environment
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      # Cache node_modules (busting only when yarn.lock change)
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      # Install dependencies
+      - name: Install
+        run: yarn install --frozen-lockfile
+      # Authenticate yarn towards registry.npmjs.org
+      - name: Authenticate with Registry
+        run: |
+          yarn logout
+          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Simulate semantic-release version
+      - name: Simulate release
+        run: yarn semantic-release --dry-run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
