@@ -1,22 +1,24 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { compilerOptions } = require('./tsconfig.json');
 
 module.exports = {
-  collectCoverage: true,
   collectCoverageFrom: ['<rootDir>/src/**/*.(js|jsx|ts|tsx)', '!**/*.test.*', '!**/*.d.ts'],
   coverageDirectory: '<rootDir>/reports/coverage',
   coveragePathIgnorePatterns: ['node_modules', '<rootDir>/src/cli.ts'],
   coverageReporters: ['lcov', 'text'],
   displayName: 'unit',
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  moduleFileExtensions: ['ts', 'js'],
+  moduleNameMapper: {
+    "src": "<rootDir>/src",
+    "src/(.*)": "<rootDir>/src/$1"
+  },
   rootDir: './',
-  testMatch: ['<rootDir>/tests/**/*.test.(js|jsx|ts|tsx)'],
+  /**
+   * We are not testing any UI at all
+   * @see https://jestjs.io/docs/en/configuration.html#testenvironment-string
+   */
+  testEnvironment: 'node',
+  testMatch: ['<rootDir>/tests/**/*.test.(js|ts)'],
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.[jt]sx?$': 'babel-jest'
   },
 };

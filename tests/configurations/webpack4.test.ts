@@ -2,12 +2,19 @@ import path from 'path';
 import { getWebpack4Configuration } from 'src';
 
 describe('configurations', () => {
+  const spies: jest.SpyInstance[] = [];
+
+  beforeEach(() => {
+    // Add a spy to catch dotenv-webpack complains about missing ".env"
+    spies.push(jest.spyOn(console, 'warn').mockImplementation());
+  });
+
+  afterEach(() => {
+    spies.forEach((spy) => spy.mockRestore());
+  });
+
   it('provides a default development configuration', () => {
-    const configuration = getWebpack4Configuration('development', {
-      dotenvPluginOptions: {
-        path: path.resolve(__dirname, '.env.test'),
-      },
-    });
+    const configuration = getWebpack4Configuration('development');
 
     expect(configuration).toHaveProperty('mode', 'development');
     expect(configuration).toHaveProperty('devServer');

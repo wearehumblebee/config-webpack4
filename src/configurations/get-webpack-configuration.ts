@@ -8,7 +8,7 @@ export type ConfigurationMode = 'development' | 'production';
 
 const getConfiguration = (
   mode: ConfigurationMode,
-  options: DevelopmentConfigurationOptions | ProductionConfigurationOptions,
+  options: DevelopmentConfigurationOptions | ProductionConfigurationOptions = {},
   extension?: Configuration,
 ): Configuration => {
   let configuration: Configuration;

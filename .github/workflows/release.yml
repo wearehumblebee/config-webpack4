@@ -23,10 +23,10 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
       # Install dependencies
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --silent
       # Run all tests
       - name: Test
-        run: yarn run test
+        run: yarn run test --ci --coverage
 
   # Conventional release
   release:
@@ -55,7 +55,7 @@ jobs:
           git config user.email github-actions@github.com
       # Install dependencies
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --silent
       # Build all packages
       - name: Build
         run: yarn run build
