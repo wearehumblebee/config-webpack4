@@ -77,8 +77,6 @@ export const getDevelopmentConfiguration = ({
      * You can still refer to it as a vague indicator
      */
     performance: {
-      maxEntrypointSize: 1536000,
-      maxAssetSize: 1536000,
       hints: 'warning',
     },
   }) as DevelopmentConfiguration;

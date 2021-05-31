@@ -19,7 +19,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
       # Install dependencies
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --silent
       # Run eslint
       - name: Lint
         run: yarn run lint
@@ -46,7 +46,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
       # Install dependencies
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --silent
       # Run all tests
       - name: Test
-        run: yarn run test
+        run: yarn run test --ci --coverage

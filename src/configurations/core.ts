@@ -1,11 +1,10 @@
 import path from 'path';
-import { Configuration } from 'webpack';
+import type { Configuration } from 'webpack';
 
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import { CleanWebpackPlugin, Options as CleanWebpackPluginOptions } from 'clean-webpack-plugin';
 import DotenvPlugin from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import LodashWebpackPlugin from 'lodash-webpack-plugin';
 
 export interface CoreConfigurationOptions {
   /** path of the build folder (default to "./dist") */
@@ -123,11 +122,6 @@ export const getCoreConfiguration = ({
         },
       ],
     }),
-    /**
-     * Lodash optimisation
-     * @see https://youmightnotneed.com/lodash/
-     */
-    new LodashWebpackPlugin(),
     /**
      * Build CSR template from file and inject scripts
      * @see https://webpack.js.org/plugins/html-webpack-plugin/

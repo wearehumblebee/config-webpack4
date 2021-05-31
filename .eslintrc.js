@@ -1,8 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    es6: true,
+    browser: false,
+    es2021: true,
     node: true,
   },
   extends: [
@@ -14,36 +14,23 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:import/typescript',
     'prettier',
-    // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors.
-    // Make sure this is always the last configuration in the extends array.
-    'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['dist/**/*', 'node_modules/**/*'],
+  ignorePatterns: ['dist/**/*', 'node_modules/**/*', 'reports/**/*'],
   parser: '@babel/eslint-parser',
   parserOptions: {
-    ecmaVersion: 2018,
-    ecmaFeatures: {
-      jsx: true,
-    },
-    requireConfigFile: false,
     sourceType: 'module',
   },
-  plugins: ['prettier', '@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'import', 'prettier'],
   settings: {
     // 'import/extensions': ['.ts', '.tsx', '.d.s', '.js', '.jsx', '.json'],
     // 'import/parsers': {
     //   '@typescript-eslint/parser': ['.ts', '.tsx'],
     // },
     // 'import/resolvers': {
-    //   // typescript: {}
     //   typescript: {
     //     // always try to resolve types under `<roo/>@types` directory even it doesn't contain any source code, like `@types/unist`
-    //     alwaysTryTypes: true,
-    //     directory: [
-    //       './tsconfig.json',
-    //       './examples/*/tsconfig.json',
-    //       './packages/*/tsconfig.json',
-    //     ],
+    //     // alwaysTryTypes: true,
+    //     project: 'tsconfig.json'
     //   }
     // }
   },

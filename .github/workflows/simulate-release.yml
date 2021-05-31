@@ -23,7 +23,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
       # Install dependencies
       - name: Install
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --silent
       # Authenticate yarn towards registry.npmjs.org
       - name: Authenticate with Registry
         run: |
